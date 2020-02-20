@@ -8,6 +8,7 @@ import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
+import DeliveryController from './app/controllers/DeliveryController';
 
 // Importing middlewares
 import authMiddleware from './app/middlewares/auth';
@@ -41,5 +42,9 @@ routes.post(
 );
 
 // Delivery routes
+routes.get('/deliveries', DeliveryController.index);
+routes.post('/deliveries', DeliveryController.store);
+routes.put('/deliveries/:id', DeliveryController.update);
+routes.delete('/deliveries/:id', DeliveryController.delete);
 
 export default routes;

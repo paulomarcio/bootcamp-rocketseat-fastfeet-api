@@ -70,7 +70,7 @@ class RecipientController {
     const recipient = await Recipient.findByPk(id);
 
     if (!recipient) {
-      return res.status(400).json({ error: 'Recipient not found' });
+      return res.status(404).json({ error: 'Recipient not found' });
     }
 
     const {

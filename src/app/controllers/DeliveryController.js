@@ -53,7 +53,7 @@ class DeliveryController {
     });
 
     if (alreadyExists) {
-      return res.status(400).json({ error: 'Recipient already registered' });
+      return res.status(401).json({ error: 'Recipient already registered' });
     }
 
     const { id, recipient_id, deliveryman_id, product } = await Delivery.create(
@@ -92,7 +92,7 @@ class DeliveryController {
     const delivery = await Delivery.findByPk(id);
 
     if (!delivery) {
-      return res.status(400).json({ error: 'Delivery not found' });
+      return res.status(404).json({ error: 'Delivery not found' });
     }
 
     const { recipient_id, deliveryman_id, product } = await delivery.update(
@@ -107,7 +107,7 @@ class DeliveryController {
     const delivery = await Delivery.findByPk(id);
 
     if (!delivery) {
-      return res.status(400).json({ error: 'Delivery not found' });
+      return res.status(404).json({ error: 'Delivery not found' });
     }
 
     delivery.canceled_at = new Date();

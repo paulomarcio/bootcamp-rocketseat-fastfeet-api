@@ -36,7 +36,7 @@ class DeliverymanController {
     });
 
     if (alreadyExists) {
-      return res.status(400).json({ error: 'Deliveryman already exists' });
+      return res.status(401).json({ error: 'Deliveryman already exists' });
     }
 
     const { id, name, email } = await Deliverymen.create(req.body);
@@ -61,7 +61,7 @@ class DeliverymanController {
     const deliveryman = await Deliverymen.findByPk(id);
 
     if (!deliveryman) {
-      return res.status(400).json({ error: 'Deliveryman not found' });
+      return res.status(404).json({ error: 'Deliveryman not found' });
     }
 
     const { email } = req.body;
@@ -72,7 +72,7 @@ class DeliverymanController {
       });
 
       if (alreadyExists) {
-        return res.status(400).json({ error: 'Deliveryman already exists' });
+        return res.status(401).json({ error: 'Deliveryman already exists' });
       }
     }
 

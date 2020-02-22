@@ -5,6 +5,12 @@ class Delivery extends Model {
     super.init(
       {
         signature_id: Sequelize.STRING,
+        url: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return `${process.env.APP_URL}/files/${this.signature_id}`;
+          },
+        },
         product: Sequelize.STRING,
         canceled_at: Sequelize.DATE,
         start_date: Sequelize.DATE,

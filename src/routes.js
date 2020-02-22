@@ -10,6 +10,7 @@ import RecipientController from './app/controllers/RecipientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryController from './app/controllers/DeliveryController';
 import PackageController from './app/controllers/PackageController';
+import ProblemController from './app/controllers/ProblemController';
 
 // Importing middlewares
 import authMiddleware from './app/middlewares/auth';
@@ -20,7 +21,7 @@ const upload = multer(multerConfig);
 // Session routes
 routes.post('/sessions', SessionController.store);
 
-// Deliveryman/Delivery routes
+// Withdrawals routes
 routes.get('/deliveryman/:id/deliveries', PackageController.index);
 routes.post('/deliveryman/:id/deliveries', PackageController.store);
 routes.put(
@@ -28,6 +29,9 @@ routes.put(
   upload.single('file'),
   PackageController.update
 );
+
+// Deliverymen Problem report routes
+routes.post('/delivery/:id/problems', ProblemController.store);
 
 // Auth Middleware
 routes.use(authMiddleware);
@@ -56,5 +60,9 @@ routes.get('/deliveries', DeliveryController.index);
 routes.post('/deliveries', DeliveryController.store);
 routes.put('/deliveries/:id', DeliveryController.update);
 routes.delete('/deliveries/:id', DeliveryController.delete);
+
+// Delivery Problems routes
+routes.get('/delivery/:id/problems', ProblemController.index);
+routes.delete('/problem/:id/cancel-delivery', ProblemController.delete);
 
 export default routes;

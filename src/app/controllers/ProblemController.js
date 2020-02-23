@@ -3,6 +3,10 @@ import { parseISO, format } from 'date-fns';
 
 import Delivery from '../models/Delivery';
 import DeliveryProblem from '../models/DeliveryProblem';
+import Recipient from '../models/Recipient';
+import Deliverymen from '../models/Deliverymen';
+
+import Mail from '../../libs/Mail';
 
 class ProblemController {
   async index(req, res) {
@@ -63,11 +67,36 @@ class ProblemController {
       return res.status(404).json({ error: 'Problem not found' });
     }
 
-    const delivery = await Delivery.findByPk(problem.delivery_id);
     const momentHour = parseISO(format(new Date(), "yyyy-MM-dd'T'HH:mm:ssxxx"));
+    const delivery = await Delivery.findByPk(problem.delivery_id, {
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: ['product'],
+        },
+        {
+          model: Deliverymen,
+          as: 'deliveryman',
+          attributes: ['name'],
+        },
+      ],
+    });
 
     delivery.canceled_at = momentHour;
     await delivery.save();
+
+    await Mail.sendMail({
+      to: `${delivery.deliveryman.name} <${delivery.deliveryman.email}>`,
+      subject: 'Entrega cancelada',
+      template: 'cancellation',
+      context: {
+        name: delivery.deliveryman.name,
+        product: delivery.product,
+        address: `${delivery.recipient.street}, ${delivery.recipient.number}, ${delivery.recipient.complement}, ${delivery.recipient.city}, ${delivery.recipient.state}`,
+        description: problem.description,
+      },
+    });
 
     return res.json();
   }
